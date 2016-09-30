@@ -24,6 +24,15 @@ namespace VKTypes.Tests
         }
 
         [Test]
+        public void NormalizeTwoBigIntWhenFirstIsSmaller()
+        {
+            BigInt first = new BigInt(123);
+            BigInt second = new BigInt(12345);
+            second.Normalize(first);
+            Assert.IsTrue(first.ToString() == "00123");
+        }
+
+        [Test]
         public void CanParseStringToBigInt()
         {
             string notDigitInTheMiddle = "12331f123123";

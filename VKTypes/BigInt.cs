@@ -40,16 +40,44 @@ namespace VKTypes
 
         }*/
 
+        public int Length()
+        {
+            return _digits.Count;
+        }
+
+        public byte GetSumRemainder(byte a, byte b)
+        {
+            var sum = a + b;
+            return Convert.ToByte(sum >= 10 ? sum % 10 : sum);
+        }
+
+        public void Normalize(BigInt another)
+        {
+            int diff = another.Length() - Length();
+            if (Math.Sign(diff) < 0) another.Normalize(this);
+            else if (Math.Sign(diff) > 0)
+            {
+                for (int i = Math.Abs(diff); i > 0; i--)
+                    _digits.Insert(0, 0);
+            }
+            
+        }
+
+        public byte GetSumWhole(byte a, byte b)
+        {
+            return Convert.ToByte((a + b) / 10);
+        }
+
+        /*public BigInt Add(BigInt another)
+        {
+            
+        }*/
+
         public static bool CanParse(string number)
         {
             if (Regex.IsMatch(number, @"[^\d]")) return false;
             return true;
         }
-
-        /*public static BigInt ValueOf(string number)
-        {
-
-        }*/
 
         public BigInt(int number)
         {
