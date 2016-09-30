@@ -29,7 +29,18 @@ namespace VKTypes.Tests
             BigInt first = new BigInt(123);
             BigInt second = new BigInt(12345);
             second.Normalize(first);
-            Assert.IsTrue(first.ToString() == "00123");
+            Assert.AreEqual(first.ToString(),"123");
+            Assert.IsTrue(first.Length() == 5);
+        }
+
+        [Test]
+        public void NormalizeTwoBigIntWhenSecondIsSmaller()
+        {
+            BigInt first = new BigInt(12345);
+            BigInt second = new BigInt(12);
+            second.Normalize(first);
+            Assert.AreEqual(second.ToString(), "12");
+            Assert.IsTrue(first.Length() == 5);
         }
 
         [Test]
@@ -44,6 +55,30 @@ namespace VKTypes.Tests
             Assert.IsFalse(BigInt.CanParse(notDigitAtStart));
             Assert.IsFalse(BigInt.CanParse(notDigitAtEnd));
             Assert.IsTrue(BigInt.CanParse(validString));
-        } 
+        }
+
+        [Test]
+        public void AddTestWithoutCarryNumber()
+        {
+            BigInt number1 = new BigInt(1111111);
+            BigInt number2 = new BigInt(111);
+            Assert.AreEqual(number1.Add(number2).ToString(), "1111222");
+        }
+
+        [Test]
+        public void AddTestWithCarryNumber()
+        {
+            BigInt number1 = new BigInt(1111111);
+            BigInt number2 = new BigInt(99);
+            Assert.AreEqual(number1.Add(number2).ToString(), "1111210");
+        }
+
+        [Test]
+        public void AddTestWithCarryNumberAndOverflow()
+        {
+            BigInt number1 = new BigInt(999);
+            BigInt number2 = new BigInt(1);
+            Assert.AreEqual(number1.Add(number2).ToString(), "1000");
+        }
     }
 }

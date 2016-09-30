@@ -45,12 +45,6 @@ namespace VKTypes
             return _digits.Count;
         }
 
-        public byte GetSumRemainder(byte a, byte b)
-        {
-            var sum = a + b;
-            return Convert.ToByte(sum >= 10 ? sum % 10 : sum);
-        }
-
         public void Normalize(BigInt another)
         {
             int diff = another.Length() - Length();
@@ -60,18 +54,33 @@ namespace VKTypes
                 for (int i = Math.Abs(diff); i > 0; i--)
                     _digits.Insert(0, 0);
             }
-            
+
         }
 
-        public byte GetSumWhole(byte a, byte b)
+        public byte GetSumRemainder(byte a, byte b, byte carryNumber = 0)
         {
-            return Convert.ToByte((a + b) / 10);
+            var sum = a + b + carryNumber;
+            return Convert.ToByte(sum >= 10 ? sum % 10 : sum);
         }
 
-        /*public BigInt Add(BigInt another)
+        public byte GetSumWhole(byte a, byte b, byte carryNumber = 0)
         {
-            
-        }*/
+            return Convert.ToByte((a + b + carryNumber) / 10);
+        }
+
+        public BigInt Add(BigInt another)
+        {
+            Normalize(another);
+            List<byte> result = new List<byte>();
+            byte carry = 0;
+            for (int i = Length() - 1; i >= 0; i--)
+            {
+                result.Insert(0, GetSumRemainder(GetBytes()[i], another.GetBytes()[i], carry));
+                carry = GetSumWhole(GetBytes()[i],another.GetBytes()[i],carry);
+            }
+            if (carry > 0) result.Insert(0, carry);
+            return new BigInt(result);
+        }
 
         public static bool CanParse(string number)
         {
@@ -89,14 +98,24 @@ namespace VKTypes
             _digits = FromStringToBytes(number);
         }
 
+        public BigInt(List<byte> digits)
+        {
+            _digits = digits;
+        }
+
         public static BigInt Zero()
         {
             return new BigInt(0);
         }
 
+        public List<byte> GetBytes()
+        {
+            return _digits;
+        }
+
         public override string ToString()
         {
-            return _digits.Aggregate("",(result, digit) => result += digit);
+            return _digits.Aggregate("",(result, digit) => result += digit).TrimStart('0');
         }
     }
 }
