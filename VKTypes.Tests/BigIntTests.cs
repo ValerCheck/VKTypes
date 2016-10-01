@@ -1,6 +1,4 @@
-﻿using System;
-using NUnit.Framework;
-using VKTypes;
+﻿using NUnit.Framework;
 
 namespace VKTypes.Tests
 {

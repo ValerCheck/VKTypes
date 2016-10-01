@@ -162,6 +162,16 @@ namespace VKTypes
             return _digits;
         }
 
+        public static BigInt operator *(BigInt one,BigInt two)
+        {
+            return one.Multiply(two);
+        }
+
+        public static BigInt operator *(BigInt one, int two)
+        {
+            return one.Multiply(ValueOf(two));
+        }
+
         public override string ToString()
         {
             if (IsZero()) return "0";
