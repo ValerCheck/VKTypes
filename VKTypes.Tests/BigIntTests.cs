@@ -96,6 +96,15 @@ namespace VKTypes.Tests
         }
 
         [Test]
+        public void OperatorsTest()
+        {
+            BigInt number1 = new BigInt(341);
+            BigInt number2 = new BigInt(100);
+            Assert.AreEqual((number1 * number2).ToString(), "34100");
+            Assert.AreEqual((number1 + number2).ToString(), "441");
+        }
+
+        [Test]
         public void MultiplyTwoNumbers()
         {
             BigInt number1 = new BigInt(341);

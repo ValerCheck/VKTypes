@@ -37,8 +37,9 @@ namespace VKTypes
             List<byte> result = new List<byte>();
             if (another.ToString().TrimEnd('0') == "1")
             {
-                for (int i = 1; i < another.Length(); i++) _digits.Add(0);
-                return this;
+                for (int i = 0; i < _digits.Count(); i++) result.Add(_digits[i]);
+                for (int i = 1; i < another.Length(); i++) result.Add(0);
+                return new BigInt(result);
             }
             for (int i = Length() - 1; i >= 0; i--)
             {
@@ -170,6 +171,16 @@ namespace VKTypes
         public static BigInt operator *(BigInt one, int two)
         {
             return one.Multiply(ValueOf(two));
+        }
+
+        public static BigInt operator +(BigInt one, int two)
+        {
+            return one.Add(ValueOf(two));
+        }
+
+        public static BigInt operator +(BigInt one, BigInt two)
+        {
+            return one.Add(two);
         }
 
         public override string ToString()
