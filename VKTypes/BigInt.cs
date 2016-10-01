@@ -68,8 +68,7 @@ namespace VKTypes
             if (Math.Sign(diff) < 0) NormalizeBytes(bytesB, bytesA);
             else if (Math.Sign(diff) > 0)
             {
-                for (int i = Math.Abs(diff); i > 0; i--)
-                    bytesB.Insert(0, 0);
+                for (int i = Math.Abs(diff); i > 0; i--) bytesB.Insert(0, 0);
             }
         }
 
@@ -139,6 +138,11 @@ namespace VKTypes
         public static BigInt Zero
         {
             get { return new BigInt(0); }
+        }
+
+        public static BigInt ValueOf(int number)
+        {
+            return new BigInt(number);
         }
 
         public bool IsZero()
