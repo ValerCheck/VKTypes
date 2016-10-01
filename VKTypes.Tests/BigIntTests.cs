@@ -80,5 +80,61 @@ namespace VKTypes.Tests
             BigInt number2 = new BigInt(1);
             Assert.AreEqual(number1.Add(number2).ToString(), "1000");
         }
+
+        [Test]
+        public void AddWhenAnotherIsZeroTest()
+        {
+            BigInt number1 = new BigInt(143);
+            BigInt zero = BigInt.Zero;
+            Assert.AreEqual(zero.Add(number1).ToString(), "143");
+        }
+
+        [Test]
+        public void MultiplyByTenTest()
+        {
+            BigInt number1 = new BigInt(341);
+            BigInt number2 = new BigInt(100);
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "34100");
+        }
+
+        [Test]
+        public void MultiplyTwoNumbers()
+        {
+            BigInt number1 = new BigInt(341);
+            BigInt number2 = new BigInt(111);
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "37851");
+        }
+
+        [Test]
+        public void MultiplyTwoNumbersIfFirstIsBigger()
+        {
+            BigInt number1 = new BigInt(34154);
+            BigInt number2 = new BigInt(32);
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "1092928");
+        }
+
+        [Test]
+        public void MultiplyTwoNumbersIfSecondIsBigger()
+        {
+            BigInt number1 = new BigInt(92);
+            BigInt number2 = new BigInt(1234);
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "113528");
+        }
+
+        [Test]
+        public void MultiplyBigNumberByOne()
+        {
+            BigInt number1 = new BigInt(1234567);
+            BigInt number2 = new BigInt(1);
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "1234567");
+        }
+
+        [Test]
+        public void MultiplyByZero()
+        {
+            BigInt number1 = new BigInt(1234567);
+            BigInt number2 = BigInt.Zero;
+            Assert.AreEqual(number1.Multiply(number2).ToString(), "0");
+        }
     }
 }

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VKTypes
 {
@@ -33,16 +31,46 @@ namespace VKTypes
             return _result;
         }
 
-        /*private BigInt Multiply(BigInt another)
+        public BigInt Multiply(BigInt another)
         {
+            List<byte> iteration = new List<byte>();
             List<byte> result = new List<byte>();
-            //return new BigInt(result);
-
-        }*/
+            if (another.ToString().TrimEnd('0') == "1")
+            {
+                for (int i = 1; i < another.Length(); i++) _digits.Add(0);
+                return this;
+            }
+            for (int i = Length() - 1; i >= 0; i--)
+            {
+                byte carry = 0;
+                for (int j = another.Length() - 1; j >= 0; j--)
+                {
+                    var mul = another.GetBytes()[j] * GetBytes()[i];
+                    iteration.Insert(0, GetRemainder(mul + carry));
+                    carry = GetWhole(mul + carry);
+                }
+                if (carry > 0) iteration.Insert(0, carry);
+                for (int j = 0; j < Length() - i - 1; j++) iteration.Add(0);
+                result = AddBytes(result, iteration);
+                iteration.Clear();
+            }
+            return new BigInt(result);
+        }
 
         public int Length()
         {
             return _digits.Count;
+        }
+
+        private void NormalizeBytes(List<byte> bytesA, List<byte> bytesB)
+        {
+            int diff = bytesA.Count() - bytesB.Count();
+            if (Math.Sign(diff) < 0) NormalizeBytes(bytesB, bytesA);
+            else if (Math.Sign(diff) > 0)
+            {
+                for (int i = Math.Abs(diff); i > 0; i--)
+                    bytesB.Insert(0, 0);
+            }
         }
 
         public void Normalize(BigInt another)
@@ -57,28 +85,33 @@ namespace VKTypes
 
         }
 
-        public byte GetSumRemainder(byte a, byte b, byte carryNumber = 0)
+        private byte GetRemainder(int number)
         {
-            var sum = a + b + carryNumber;
-            return Convert.ToByte(sum >= 10 ? sum % 10 : sum);
+            return Convert.ToByte(number >= 10 ? number % 10 : number);
         }
 
-        public byte GetSumWhole(byte a, byte b, byte carryNumber = 0)
+        private byte GetWhole(int number)
         {
-            return Convert.ToByte((a + b + carryNumber) / 10);
+            return Convert.ToByte(number / 10);
+        }
+
+        private List<byte> AddBytes(List<byte> bytesA, List<byte> bytesB)
+        {
+            NormalizeBytes(bytesA, bytesB);
+            List<byte> result = new List<byte>();
+            byte carry = 0;
+            for (int i = bytesA.Count() - 1; i >= 0; i--)
+            {
+                result.Insert(0, GetRemainder(bytesA[i] + bytesB[i] + carry));
+                carry = GetWhole(bytesA[i] + bytesB[i] + carry);
+            }
+            if (carry > 0) result.Insert(0, carry);
+            return result;
         }
 
         public BigInt Add(BigInt another)
         {
-            Normalize(another);
-            List<byte> result = new List<byte>();
-            byte carry = 0;
-            for (int i = Length() - 1; i >= 0; i--)
-            {
-                result.Insert(0, GetSumRemainder(GetBytes()[i], another.GetBytes()[i], carry));
-                carry = GetSumWhole(GetBytes()[i],another.GetBytes()[i],carry);
-            }
-            if (carry > 0) result.Insert(0, carry);
+            List<byte> result = AddBytes(GetBytes(), another.GetBytes());
             return new BigInt(result);
         }
 
@@ -103,9 +136,21 @@ namespace VKTypes
             _digits = digits;
         }
 
-        public static BigInt Zero()
+        public static BigInt Zero
         {
-            return new BigInt(0);
+            get { return new BigInt(0); }
+        }
+
+        public bool IsZero()
+        {
+            bool isZero = true;
+            for (int i = 0; i < Length() - 1; i++)
+            {
+                if (_digits[i] == 0) continue;
+                isZero = false;
+                break;
+            }
+            return isZero;
         }
 
         public List<byte> GetBytes()
@@ -115,6 +160,7 @@ namespace VKTypes
 
         public override string ToString()
         {
+            if (IsZero()) return "0";
             return _digits.Aggregate("",(result, digit) => result += digit).TrimStart('0');
         }
     }
