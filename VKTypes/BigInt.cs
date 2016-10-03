@@ -13,12 +13,12 @@ namespace VKTypes
         {
             List<byte> _resultBytes = new List<byte>();
             int digit = 0;
-            while (number > 0)
+            do
             {
                 digit = number % 10;
                 _resultBytes.Insert(0, Convert.ToByte(digit));
                 number /= 10;
-            }
+            } while (number > 0);
             return _resultBytes;
         }
 
@@ -148,14 +148,7 @@ namespace VKTypes
 
         public bool IsZero()
         {
-            bool isZero = true;
-            for (int i = 0; i < Length() - 1; i++)
-            {
-                if (_digits[i] == 0) continue;
-                isZero = false;
-                break;
-            }
-            return isZero;
+            return _digits.FirstOrDefault(d => d > 0) == 0;
         }
 
         public List<byte> GetBytes()

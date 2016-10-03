@@ -1,10 +1,21 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace VKTypes.Tests
 {
     [TestFixture]
     public class BigIntTests
     {
+        public BigInt Factorial(int n)
+        {
+            BigInt result = new BigInt(1);
+            for (int i = 2; i <= n; i++)
+            {
+                result = result * i;
+            }
+            return result;
+        }
+
         [Test]
         public void FromIntToByteConversionSuccessTest()
         {
@@ -142,6 +153,16 @@ namespace VKTypes.Tests
             BigInt number1 = new BigInt(1234567);
             BigInt number2 = BigInt.Zero;
             Assert.AreEqual(number1.Multiply(number2).ToString(), "0");
+        }
+
+        [Test]
+        public void FactorialTest()
+        {
+            List<string> typicalResults = new List<string> {
+                "1", "2", "6", "24", "120", "720", "5040", "40320", "362880", "3628800"
+            };
+            for (int i = 1; i <= 10; i++)
+                Assert.AreEqual(Factorial(i).ToString(), typicalResults[i-1]);
         }
     }
 }
